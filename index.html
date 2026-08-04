@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Chroniken von Aetheria</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="frame">
+  <canvas id="screen" width="320" height="240"></canvas>
+  <div id="touch">
+    <div id="dpad">
+      <button class="tb" data-key="ArrowUp">&#9650;</button>
+      <button class="tb" data-key="ArrowLeft">&#9664;</button>
+      <button class="tb" data-key="ArrowDown">&#9660;</button>
+      <button class="tb" data-key="ArrowRight">&#9654;</button>
+    </div>
+    <div id="abtn">
+      <button class="tb round" data-key="Enter">A</button>
+      <button class="tb round" data-key="Escape">B</button>
+    </div>
+  </div>
+</div>
+<div id="hint">
+  Pfeiltasten / WASD = Bewegen &nbsp;&middot;&nbsp; Enter / Z = Best&auml;tigen &nbsp;&middot;&nbsp;
+  Esc / X = Men&uuml; &amp; Zur&uuml;ck &nbsp;&middot;&nbsp; Shift = Rennen &nbsp;&middot;&nbsp; M = Musik an/aus
+</div>
+
+<script src="js/font.js"></script>
+<script src="js/gfx.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/data.js"></script>
+<script src="js/maps.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/world.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #0b0b12;
+  color: #8a8ab0;
+  font-family: "Courier New", Courier, monospace;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#frame {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas#screen {
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: #000;
+  box-shadow: 0 0 0 2px #1b1b2c, 0 0 40px rgba(60, 70, 160, .35);
+}
+
+#hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: .5px;
+  opacity: .55;
+  pointer-events: none;
+}
+
+/* ---- Touch controls (mobile only) ---- */
+#touch { display: none; }
+
+.tb {
+  background: rgba(40, 44, 80, .78);
+  border: 2px solid rgba(150, 160, 220, .5);
+  color: #dfe4ff;
+  font-size: 20px;
+  font-family: inherit;
+  border-radius: 8px;
+  width: 56px;
+  height: 56px;
+  touch-action: none;
+}
+.tb:active { background: rgba(90, 100, 170, .9); }
+.tb.round { border-radius: 50%; font-weight: bold; }
+
+@media (hover: none) and (pointer: coarse) {
+  #hint { display: none; }
+  #touch { display: block; }
+
+  #dpad {
+    position: fixed;
+    left: 14px;
+    bottom: 20px;
+    width: 174px;
+    height: 174px;
+  }
+  #dpad .tb { position: absolute; }
+  #dpad .tb[data-key="ArrowUp"]    { left: 59px; top: 0; }
+  #dpad .tb[data-key="ArrowLeft"]  { left: 0; top: 59px; }
+  #dpad .tb[data-key="ArrowDown"]  { left: 59px; top: 118px; }
+  #dpad .tb[data-key="ArrowRight"] { left: 118px; top: 59px; }
+
+  #abtn {
+    position: fixed;
+    right: 18px;
+    bottom: 30px;
+  }
+  #abtn .tb { display: block; margin-bottom: 14px; width: 66px; height: 66px; }
+}
