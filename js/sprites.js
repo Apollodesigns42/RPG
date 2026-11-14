@@ -376,6 +376,8 @@
                w: '#ffffff', d: '#8a5a2a', m: '#b0b6c2' },
     goblinS: { o: '#201230', a: '#a87fd0', b: '#7f5aa8', c: '#5a3a7a', r: '#ffd030',
                w: '#ffffff', d: '#c9a83c', m: '#e0d060' },
+    imp:     { o: '#2a0c08', a: '#ff8a4a', b: '#d8502a', c: '#9a2f18', r: '#ffe45c',
+               w: '#ffffff', d: '#5a2a1a', m: '#e8c45c' },
     bandit:  { o: '#2a1a0e', a: '#d8a86a', b: '#b08040', c: '#7a5628', r: '#ff4040',
                w: '#ffffff', d: '#8a3a3a', m: '#c0c6d2' },
     skel:    { o: '#1a1a20', w: '#e8e4d8', W: '#ffffff', m: '#b0b6c2' },
@@ -432,6 +434,7 @@
     ce('goblin',     E.goblin,   EP.goblin);
     ce('goblin_sh',  E.goblin,   EP.goblinS);
     ce('bandit',     E.goblin,   EP.bandit);
+    ce('imp',        E.goblin,   EP.imp);
     ce('skeleton',   E.skeleton, EP.skel);
     ce('skeleton_d', E.skeleton, EP.skelD);
     ce('plant',      E.plant,    EP.plant);

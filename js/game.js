@@ -1,5 +1,5 @@
 /* ============================================================
-   game.js  --  Spielzustand, Menues, Story, Speichern, Hauptschleife
+   game.js  --  Spielzustand, Menüs, Story, Speichern, Hauptschleife
    ============================================================ */
 (function (global) {
   'use strict';
@@ -130,6 +130,7 @@
     Game.gold = 300;
     Game.flags = { crystals: 0, events: {}, chests: {}, quest: false, recruited: {} };
     Game.time = 0;
+    Game.wx = null; Game.wy = null;
     Maps.reset();
     Game.state = 'world';
     World.enter('aldenmark_castle', 10, 12, 'up');
@@ -140,7 +141,7 @@
     var data = {
       v: Game.version, gold: Game.gold, items: Game.items, gear: Game.gear,
       flags: Game.flags, mapId: Game.mapId, px: Game.px, py: Game.py,
-      time: Game.time,
+      time: Game.time, wx: Game.wx, wy: Game.wy,
       party: Game.party.map(function (a) {
         return { id: a.id, lvl: a.lvl, xp: a.xp, hp: a.hp, mp: a.mp, equip: a.equip };
       })
@@ -168,6 +169,7 @@
     Game.flags.chests = Game.flags.chests || {};
     Game.flags.recruited = Game.flags.recruited || {};
     Game.time = d.time || 0;
+    Game.wx = d.wx; Game.wy = d.wy;
     Game.party = d.party.map(function (p) {
       var a = Game.makeActor(p.id, p.lvl);
       a.xp = p.xp; a.equip = p.equip;
@@ -191,30 +193,31 @@
       'Vier Kristalle hielten die Welt im Gleichgewicht -',
       'Feuer, Eis, Wind und Erde.',
       '',
-      'Doch Malkoth, der Schattenfuerst, hat sie entweiht.',
-      'Fluesse versiegen, Felder verdorren, die Naechte werden laenger.',
+      'Doch Malkoth, der Schattenfürst, hat sie entweiht.',
+      'Flüsse versiegen, Felder verdorren, die Nächte werden länger.',
       '',
-      'Koenig Aldric hat seinen treuesten Hauptmann rufen lassen...'
+      'König Aldric hat seinen treuesten Hauptmann rufen lassen...'
     ], function () {
       UI.say([
         'Alric, mein treuester Hauptmann.',
-        'Vier Waechter halten die Kristalle in ihrer Gewalt.',
+        'Vier Wächter halten die Kristalle in ihrer Gewalt.',
         'Brich ihre Macht, und die Kristalle werden wieder leuchten.',
         '',
-        'Erst dann faellt die Barriere um die Finsterburg.',
+        'Erst dann fällt die Barriere um die Finsterburg.',
         'Lyra vom Lichttempel wird dich begleiten.',
         'Geh - und rette, was noch zu retten ist!'
       ], function () {
         Game.flags.quest = true;
-        UI.say(['Lyra schliesst sich der Gruppe an!'], function () {
+        UI.say(['Lyra schließt sich der Gruppe an!'], function () {
           Sound.sfx('levelup');
         }, { speaker: 'Lyra' });
-      }, { speaker: 'Koenig Aldric' });
+      }, { speaker: 'König Aldric' });
     });
   }
 
   Game.talkKing = function (npc) {
     var lines = typeof npc.lines === 'function' ? npc.lines(Game) : npc.lines;
+    if (Game.flags.quest) lines = lines.concat(['', Game.goal().text]);
     UI.say(lines, null, { speaker: npc.name });
   };
 
@@ -233,7 +236,7 @@
       var i = m.npcs.indexOf(npc);
       if (i >= 0) m.npcs.splice(i, 1);
       Sound.sfx('levelup');
-      UI.say([a.name + ' (' + a.cls + ') schliesst sich der Gruppe an!']);
+      UI.say([a.name + ' (' + a.cls + ') schließt sich der Gruppe an!']);
     }, { speaker: npc.name });
   };
 
@@ -257,12 +260,12 @@
             if (map.altar) Maps.set(map, map.altar.x, map.altar.y, GFX.TILE.CRYSTAL);
             Sound.play(map.music);
             UI.say([
-              'Der Waechter zerfaellt zu Asche.',
-              'Ueber dem Sockel erwacht der ' + cr.name + '!',
+              'Der Wächter zerfällt zu Asche.',
+              'Über dem Sockel erwacht der ' + cr.name + '!',
               '',
               cr.name + ' wiederhergestellt (' + Game.flags.crystals + '/4).',
               Game.flags.crystals >= 4
-                ? 'Alle vier Kristalle leuchten. Die Barriere der Finsterburg faellt!'
+                ? 'Alle vier Kristalle leuchten. Die Barriere der Finsterburg fällt!'
                 : 'Noch ' + (4 - Game.flags.crystals) + ' Kristalle harren ihrer Befreiung.'
             ]);
           } else {
@@ -283,16 +286,16 @@
       '',
       'Dann ist der Schatten fort.',
       '',
-      'Ueber Aetheria bricht ein Morgen an, wie ihn seit',
+      'Über Aetheria bricht ein Morgen an, wie ihn seit',
       'Generationen niemand gesehen hat.',
-      'Die Fluesse fuellen sich. Die Felder ergruenen.',
+      'Die Flüsse füllen sich. Die Felder ergrünen.',
       '',
-      'Vier Kristalle leuchten wieder ueber der Welt -',
-      'und vier Gefaehrten kehren heim.',
+      'Vier Kristalle leuchten wieder über der Welt -',
+      'und vier Gefährten kehren heim.',
       '',
       'ENDE',
       '',
-      'Danke fuers Spielen!'
+      'Danke fürs Spielen!'
     ], function () {
       Game.endingHold = true;
     });
@@ -304,7 +307,7 @@
   }
 
   /* ============================================================
-     Zufallskaempfe
+     Zufallskämpfe
      ============================================================ */
 
   Game.startRandomBattle = function (table) {
@@ -415,12 +418,12 @@
 
   Game.openInn = function (npc) {
     var price = npc.inn;
-    UI.confirm('Uebernachten fuer ' + price + ' Gold?', function () {
-      if (Game.gold < price) { UI.say('Dafuer reicht dein Gold nicht.'); Sound.sfx('error'); return; }
+    UI.confirm('Übernachten für ' + price + ' Gold?', function () {
+      if (Game.gold < price) { UI.say('Dafür reicht dein Gold nicht.'); Sound.sfx('error'); return; }
       Game.gold -= price;
       Game.party.forEach(function (a) { a.hp = a.maxhp; a.mp = a.maxmp; a.status = {}; });
       Sound.sfx('heal');
-      UI.say(['Ihr schlaft tief und fest...', 'KP und MP vollstaendig wiederhergestellt!'], function () {
+      UI.say(['Ihr schlaft tief und fest...', 'KP und MP vollständig wiederhergestellt!'], function () {
         UI.confirm('Spielstand speichern?', function () {
           if (Game.save()) UI.say('Spielstand gespeichert.');
           else UI.say('Speichern fehlgeschlagen.');
@@ -430,7 +433,7 @@
   };
 
   /* ============================================================
-     Hauptmenue
+     Hauptmenü
      ============================================================ */
 
   Game.openMenu = function () {
@@ -442,10 +445,11 @@
     var cmds = [
       { label: 'Item', key: 'item' },
       { label: 'Magie', key: 'magic' },
-      { label: 'Ausruestung', key: 'equip' },
+      { label: 'Ausrüstung', key: 'equip' },
       { label: 'Status', key: 'status' },
+      { label: 'Karte', key: 'map' },
       { label: 'Speichern', key: 'save' },
-      { label: 'Zurueck', key: 'back' }
+      { label: 'Zurück', key: 'back' }
     ];
     var idx = 0;
     var modal = {
@@ -459,8 +463,9 @@
           if (c === 'back') { UI.pop(); return; }
           if (c === 'item') itemMenu();
           else if (c === 'magic') pickMember('Magie', function (a) { fieldMagicMenu(a); }, function (a) { return a.spells.length > 0; });
-          else if (c === 'equip') pickMember('Ausruestung', function (a) { equipMenu(a); });
+          else if (c === 'equip') pickMember('Ausrüstung', function (a) { equipMenu(a); });
           else if (c === 'status') pickMember('Status', function (a) { statusScreen(a); });
+          else if (c === 'map') mapScreen();
           else if (c === 'save') {
             UI.confirm('Spielstand speichern?', function () {
               if (Game.save()) { Sound.sfx('confirm'); UI.notice('Gespeichert!'); }
@@ -471,23 +476,23 @@
       },
       draw: function () {
         // Befehlsspalte
-        UI.panel(4, 4, 86, 92);
+        UI.panel(4, 4, 86, 105);
         for (var i = 0; i < cmds.length; i++) {
           var y = 12 + i * 13;
           if (i === idx) UI.cursor(10, y);
           UI.text(cmds[i].label, 20, y, i === idx ? UI.COL.sel : UI.COL.text);
         }
         // Info
-        UI.panel(4, 100, 86, 54);
-        UI.text('Gold', 12, 106, UI.COL.dim);
-        UI.textR(String(Game.gold), 82, 106, '#ffe45c');
-        UI.text('Zeit', 12, 118, UI.COL.dim);
-        UI.textR(fmtTime(Game.time), 82, 118, UI.COL.text);
-        UI.text('Kristalle', 12, 130, UI.COL.dim);
+        UI.panel(4, 112, 86, 54);
+        UI.text('Gold', 12, 118, UI.COL.dim);
+        UI.textR(String(Game.gold), 82, 118, '#ffe45c');
+        UI.text('Zeit', 12, 130, UI.COL.dim);
+        UI.textR(fmtTime(Game.time), 82, 130, UI.COL.text);
+        UI.text('Kristalle', 12, 142, UI.COL.dim);
         for (var c = 0; c < 4; c++) {
           var got = c < Game.flags.crystals;
           var col = got ? Data.CRYSTALS[c].color : '#2a3050';
-          var cx2 = 22 + c * 14, cy2 = 141;
+          var cx2 = 22 + c * 14, cy2 = 153;
           GFX.rect(cx2 + 1, cy2, 5, 3, col);
           GFX.rect(cx2, cy2 + 3, 7, 3, col);
           GFX.rect(cx2 + 1, cy2 + 6, 5, 2, col);
@@ -588,15 +593,15 @@
         case 'mp':
           var am = Math.min(d.power, a.maxmp - a.mp);
           if (am <= 0) { msg = a.name + ' hat volle MP.'; break; }
-          a.mp += am; ok = true; msg = a.name + ' erhaelt ' + am + ' MP.'; break;
+          a.mp += am; ok = true; msg = a.name + ' erhält ' + am + ' MP.'; break;
         case 'full':
           if (a.hp >= a.maxhp && a.mp >= a.maxmp) { msg = 'Hat keine Wirkung.'; break; }
           a.hp = a.maxhp; a.mp = a.maxmp; a.status = {}; ok = true;
-          msg = a.name + ' ist vollstaendig wiederhergestellt!'; break;
+          msg = a.name + ' ist vollständig wiederhergestellt!'; break;
         case 'revive':
           if (a.hp > 0) { msg = a.name + ' lebt bereits.'; break; }
           a.hp = Math.max(1, Math.round(a.maxhp * d.power)); ok = true;
-          msg = a.name + ' kehrt ins Leben zurueck!'; break;
+          msg = a.name + ' kehrt ins Leben zurück!'; break;
         case 'cure':
           if (!a.status[d.status]) { msg = 'Hat keine Wirkung.'; break; }
           delete a.status[d.status]; ok = true; msg = a.name + ' ist geheilt.'; break;
@@ -661,7 +666,7 @@
           } else if (s.kind === 'revive') {
             if (t.hp > 0) { UI.say(t.name + ' lebt bereits.'); return; }
             t.hp = Math.max(1, Math.round(t.maxhp * s.power));
-            msg = t.name + ' kehrt ins Leben zurueck!';
+            msg = t.name + ' kehrt ins Leben zurück!';
           }
           a.mp -= s.mp;
           Sound.sfx('heal');
@@ -671,16 +676,16 @@
     });
   }
 
-  /* ---------- Ausruestung ---------- */
+  /* ---------- Ausrüstung ---------- */
 
   function equipMenu(a) {
     var slots = [
       { label: 'Waffe', slot: 'weapon' },
-      { label: 'Ruestung', slot: 'armor' },
+      { label: 'Rüstung', slot: 'armor' },
       { label: 'Accessoire', slot: 'acc' }
     ];
     var modal = UI.menu({
-      x: 20, y: 40, w: 190, rows: 3, title: a.name + ' - Ausruestung',
+      x: 20, y: 40, w: 190, rows: 3, title: a.name + ' - Ausrüstung',
       itemH: 13,
       items: slots.map(function (s) {
         var e = Data.EQUIP[a.equip[s.slot]];
@@ -707,7 +712,7 @@
       if (slot !== 'acc' && allowed.indexOf(e.kind) < 0) continue;
       items.push({ label: e.name, key: id, right: 'x' + Game.gear[id] });
     }
-    if (items.length === 1) { Sound.sfx('error'); UI.notice('Nichts Passendes im Gepaeck.'); return; }
+    if (items.length === 1) { Sound.sfx('error'); UI.notice('Nichts Passendes im Gepäck.'); return; }
     UI.menu({
       x: 20, y: 96, w: 190, rows: 7, title: 'Anlegen', items: items,
       footer: function (it) { return it && it.key ? describe(it.key) : ''; },
@@ -719,7 +724,7 @@
         recalc(a);
         Sound.sfx('confirm');
         UI.pop();
-        // Anzeige im Elternmenue auffrischen
+        // Anzeige im Elternmenü auffrischen
         parent.cfg.items.forEach(function (x) {
           var e = Data.EQUIP[a.equip[x.key]];
           x.right = e ? e.name : '-';
@@ -767,21 +772,21 @@
         UI.bar(120, 95, 60, 5, a.mp, a.maxmp, UI.COL.mp);
 
         var keys = [['atk', 'Angriff'], ['def', 'Abwehr'], ['mag', 'Magie'],
-                    ['res', 'Resistenz'], ['spd', 'Tempo'], ['luk', 'Glueck']];
+                    ['res', 'Resistenz'], ['spd', 'Tempo'], ['luk', 'Glück']];
         keys.forEach(function (k, i) {
           var y = 112 + i * 12;
           UI.text(k[1], 30, y, UI.COL.dim);
           UI.textR(String(Game.stat(a, k[0])), 130, y, UI.COL.text);
         });
 
-        UI.text('Ausruestung', 190, 82, UI.COL.sel);
+        UI.text('Ausrüstung', 190, 82, UI.COL.sel);
         ['weapon', 'armor', 'acc'].forEach(function (s, i) {
           var e = Data.EQUIP[a.equip[s]];
           UI.text(e ? e.name : '-', 190, 96 + i * 12, UI.COL.text);
         });
 
         var skills = a.spells.concat(a.abilities);
-        UI.text('Faehigkeiten', 190, 138, UI.COL.sel);
+        UI.text('Fähigkeiten', 190, 138, UI.COL.sel);
         for (var i = 0; i < Math.min(6, skills.length); i++) {
           var d = Data.SPELLS[skills[i]] || Data.ABILITIES[skills[i]];
           UI.text(d.name, 190, 152 + i * 11, UI.COL.text);
@@ -793,6 +798,110 @@
       }
     };
     UI.push(modal);
+  }
+
+
+  /* ============================================================
+     Zielhinweis & Weltkarte
+     ============================================================ */
+
+  /** Naechstes Etappenziel: Text + Schluessel der Landmarke. */
+  Game.goal = function () {
+    var f = Game.flags, ev = f.events, r = f.recruited;
+    if (!r.faelan) return { key: 'selvia', text: 'Ziel: Sucht in Hafen Selvia im Südosten nach dem Magier Faelan.' };
+    if (!ev.boss_fire) return { key: 'cave', text: 'Ziel: Die Feuerhöhle im Aschland westlich von Aldenmark.' };
+    if (!r.nyx) return { key: 'nordheim', text: 'Ziel: Reist nach Nordheim im Schneeland - dort wartet Verstärkung.' };
+    if (!ev.boss_ice) return { key: 'icetemple', text: 'Ziel: Der Eistempel östlich von Nordheim.' };
+    if (!ev.boss_wind) return { key: 'windtower', text: 'Ziel: Der Windturm im Osthochland.' };
+    if (!ev.boss_earth) return { key: 'earthruin', text: 'Ziel: Die Erdruinen in der Wüste im Südosten.' };
+    if (!ev.boss_final) return { key: 'fortress', text: 'Ziel: Die Finsterburg im Herzen des Finsterlands. Die Barriere ist gefallen!' };
+    return { key: 'aldenmark', text: 'Aetheria ist gerettet.' };
+  };
+
+  var MAP_COLORS = null, mapImg = null, mapImgFor = null;
+
+  function worldImage(m) {
+    if (mapImg && mapImgFor === m) return mapImg;
+    var T = GFX.TILE;
+    if (!MAP_COLORS) {
+      MAP_COLORS = {};
+      MAP_COLORS[T.GRASS] = '#3d8340'; MAP_COLORS[T.FLOWER] = '#4f9c46'; MAP_COLORS[T.TREE] = '#1f5527';
+      MAP_COLORS[T.WATER] = '#1c3f8f'; MAP_COLORS[T.SHALLOW] = '#3a72c9'; MAP_COLORS[T.MOUNT] = '#8d8475';
+      MAP_COLORS[T.HILL] = '#5c8f47'; MAP_COLORS[T.ROCK] = '#7d7466'; MAP_COLORS[T.SAND] = '#d8b878';
+      MAP_COLORS[T.PALM] = '#b8a060'; MAP_COLORS[T.SNOW] = '#e4ebf5'; MAP_COLORS[T.SNOWTREE] = '#9fc0b0';
+      MAP_COLORS[T.SWAMP] = '#3a4a2c'; MAP_COLORS[T.DEADTREE] = '#2b2a22'; MAP_COLORS[T.ROAD] = '#c7ab80';
+      MAP_COLORS[T.BRIDGE] = '#8a6134'; MAP_COLORS[T.VOLCANO] = '#6b3a2a'; MAP_COLORS[T.CHEST] = '#3d8340';
+    }
+    var cv = document.createElement('canvas');
+    cv.width = m.w; cv.height = m.h;
+    var c = cv.getContext('2d');
+    for (var y = 0; y < m.h; y++) for (var x = 0; x < m.w; x++) {
+      c.fillStyle = MAP_COLORS[Maps.at(m, x, y)] || '#3d8340';
+      c.fillRect(x, y, 1, 1);
+    }
+    mapImg = cv; mapImgFor = m;
+    return cv;
+  }
+
+  function mapScreen() {
+    var m = Maps.get('world'), S = 3, ox = 12, oy = 24;
+    var img = worldImage(m);
+    var L = Maps.LANDMARKS;
+    var order = [
+      ['aldenmark', 'Aldenmark'], ['selvia', 'Selvia'], ['nordheim', 'Nordheim'],
+      ['cave', 'Feuerhöhle', 'boss_fire'], ['icetemple', 'Eistempel', 'boss_ice'],
+      ['windtower', 'Windturm', 'boss_wind'], ['earthruin', 'Erdruinen', 'boss_earth'],
+      ['fortress', 'Festung', 'boss_final']
+    ];
+    var goal = Game.goal();
+    var goalLines = Font.wrap(goal.text, 296);
+    UI.push({
+      key: function (k) {
+        if (k === 'cancel' || k === 'confirm' || k === 'menu') { Sound.sfx('cancel'); UI.pop(); }
+      },
+      draw: function () {
+        UI.panel(4, 4, 312, 232);
+        UI.text('Weltkarte von Aetheria', 12, 10, UI.COL.sel);
+        GFX.frame(ox - 1, oy - 1, m.w * S + 2, m.h * S + 2, UI.COL.edge2);
+        GFX.ctx.drawImage(img, ox, oy, m.w * S, m.h * S);
+        var blink = (UI.time % .7) < .4;
+
+        order.forEach(function (o, i) {
+          var lm = L[o[0]];
+          var town = !o[2];
+          var done = o[2] && Game.flags.events[o[2]];
+          var col = town ? '#ffe45c' : (done ? '#7fd8ff' : '#ff5a4a');
+          var mx = ox + lm.x * S - 1, my = oy + lm.y * S - 1;
+          GFX.rect(mx - 1, my - 1, 7, 7, '#000814');
+          GFX.rect(mx, my, 5, 5, col);
+          if (o[0] === goal.key && blink) GFX.frame(mx - 3, my - 3, 11, 11, '#ffffff');
+          UI.text(String(i + 1), mx + 7, my - 1, '#ffffff');
+          // Legende
+          var ly = 26 + i * 15;
+          GFX.rect(238, ly + 1, 5, 5, col);
+          UI.text((i + 1) + ' ' + o[1], 247, ly, o[0] === goal.key ? UI.COL.sel : UI.COL.text);
+        });
+
+        UI.text('Stadt', 247, 152, '#ffe45c');
+        UI.text('Wächter', 247, 164, '#ff5a4a');
+        UI.text('Befreit', 247, 176, '#7fd8ff');
+        UI.text('Gruppe', 247, 188, '#ffffff');
+        GFX.rect(238, 153, 5, 5, '#ffe45c'); GFX.rect(238, 165, 5, 5, '#ff5a4a');
+        GFX.rect(238, 177, 5, 5, '#7fd8ff');
+        GFX.rect(239, 189, 3, 5, '#ffffff'); GFX.rect(238, 190, 5, 3, '#ffffff');
+
+        // Position der Gruppe
+        var gx = Game.wx != null ? Game.wx : L.aldenmark.x;
+        var gy = Game.wy != null ? Game.wy : L.aldenmark.y + 1;
+        if (blink) {
+          var px = ox + gx * S, py = oy + gy * S;
+          GFX.rect(px - 2, py, 7, 3, '#000814'); GFX.rect(px, py - 2, 3, 7, '#000814');
+          GFX.rect(px - 1, py + 1, 5, 1, '#ffffff'); GFX.rect(px + 1, py - 1, 1, 5, '#ffffff');
+        }
+
+        goalLines.forEach(function (l, i) { UI.text(l, 12, 210 + i * 11, i ? UI.COL.text : UI.COL.sel); });
+      }
+    });
   }
 
   /* ============================================================
@@ -831,7 +940,7 @@
     Font.drawCentered(GFX.ctx, 'C H R O N I K   D E R   V I E R   K R I S T A L L E',
       GFX.VW / 2, ty + 30, '#8fb0e8', '#000');
 
-    // Menue
+    // Menü
     var opts = [{ label: 'Neues Spiel' }];
     if (Game.hasSave()) opts.push({ label: 'Fortsetzen' });
     opts.push({ label: 'Musik: ' + (Sound.enabled ? 'An' : 'Aus') });
@@ -845,7 +954,7 @@
       Font.drawCentered(GFX.ctx, opts[i].label, GFX.VW / 2 + 4, oy,
         i === titleIdx ? UI.COL.sel : UI.COL.text, '#000');
     }
-    Font.drawCentered(GFX.ctx, 'Enter = Auswaehlen', GFX.VW / 2, GFX.VH - 12, '#5f6a92', '#000');
+    Font.drawCentered(GFX.ctx, 'Enter = Auswählen', GFX.VW / 2, GFX.VH - 12, '#5f6a92', '#000');
   }
 
   var titleOptions = [];
@@ -902,7 +1011,7 @@
     Font.drawCentered(GFX.ctx, 'D I E   G R U P P E   F I E L', GFX.VW / 2, 92, '#c04040', '#200');
     if (Game.gameOverT > 2) {
       Font.drawCentered(GFX.ctx, Game.hasSave() ? 'Enter: Letzten Spielstand laden'
-        : 'Enter: Zurueck zum Titel', GFX.VW / 2, 140, '#9aa6c8', '#000');
+        : 'Enter: Zurück zum Titel', GFX.VW / 2, 140, '#9aa6c8', '#000');
       Font.drawCentered(GFX.ctx, 'Esc: Titelbildschirm', GFX.VW / 2, 154, '#5f6a92', '#000');
     }
     GFX.ctx.restore();
@@ -1017,7 +1126,11 @@
     UI.update(dt);
     titleT += dt;
     if (Game.state === 'world') { Game.time += dt; World.update(dt, Input); }
-    else if (Game.state === 'battle') Battle.update(dt);
+    else if (Game.state === 'battle') {
+      // Shift (oder gehaltene Bestaetigung waehrend der Ausfuehrung) spult vor
+      var fast = Input.held('run') || (Battle.phase === 'exec' && Input.held('confirm'));
+      Battle.update(dt * (fast ? 3 : 1));
+    }
     else if (Game.state === 'gameover') Game.gameOverT += dt;
     else if (Game.state === 'ending') { /* nur Dialog */ }
 
@@ -1057,7 +1170,7 @@
       GFX.draw(Sprites.crystals[i], cx - 8, cy, 1);
     }
     if (Game.endingHold) {
-      Font.drawCentered(GFX.ctx, 'Enter: Zurueck zum Titel', GFX.VW / 2, GFX.VH - 20, '#ffe45c', '#000');
+      Font.drawCentered(GFX.ctx, 'Enter: Zurück zum Titel', GFX.VW / 2, GFX.VH - 20, '#ffe45c', '#000');
     }
   }
 

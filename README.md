@@ -18,7 +18,7 @@ als Chiptune synthetisiert. Es gibt keine Bild-, Audio- oder Font-Dateien.
 | Pfeiltasten / WASD | Bewegen, Menü-Navigation |
 | Enter / Z / Leertaste | Bestätigen, Reden, Truhen öffnen |
 | Esc / X | Hauptmenü, Zurück |
-| Shift | Rennen |
+| Shift | Rennen · im Kampf: Animationen vorspulen |
 | M | Musik an/aus |
 
 Auf Mobilgeräten erscheinen automatisch ein Steuerkreuz und A/B-Tasten.
@@ -82,6 +82,13 @@ werden alle Aktionen – Verbündete wie Gegner – nach Tempo sortiert ausgefü
 Jeder Boss hat ein eigenes Angriffsmuster und schaltet unterhalb von ~35 % KP
 einen verheerenden Spezialangriff frei.
 
+### Orientierung
+
+Im Hauptmenü zeigt **Karte** die ganze Welt mit allen Städten und
+Kristallkammern, der Position der Gruppe und dem nächsten Etappenziel. Auch
+König Aldric nennt auf Nachfrage das aktuelle Ziel. Wege auf der Weltkarte sind
+sicher – Zufallskämpfe gibt es nur abseits davon.
+
 ### Fortschritt
 
 Stufen bis 50, Ausrüstung in vier Qualitätsstufen (Waffen, Rüstungen,
@@ -90,11 +97,17 @@ Accessoires), Läden zum Kaufen und Verkaufen, Spielstand im Browser
 
 ## Balance
 
-Die Bosskämpfe wurden mit einer Monte-Carlo-Simulation der Kampfformeln
-austariert (300 Durchläufe je Szenario, Gegner-KI und eine vernünftige
-Spielerstrategie nachgebildet). Zielwerte auf dem vorgesehenen Level und mit
-zeitgemäßer Ausrüstung: **70–90 % Siegquote über 5–7 Runden**. Wer unterlevelt
-antritt, verliert – wer sich Zeit lässt, gewinnt komfortabel.
+Zwei Dinge wurden gerechnet statt geschätzt:
+
+* **Bosskämpfe:** Monte-Carlo-Simulation der Kampfformeln (300 Durchläufe je
+  Szenario). Auf dem vorgesehenen Level mit zeitgemäßer Ausrüstung liegen die
+  Siegquoten bei 70–90 % über 5–7 Runden.
+* **Levelkurve:** Die EXP-Kurve ist an einen typischen Spielverlauf angepasst
+  (rund 260 Kämpfe). Wer die Dungeons normal durchläuft, steht ohne Grinden
+  etwa auf Stufe 11 / 19 / 26 / 31 / 39 vor den fünf Bossen.
+
+Die Gegend um Aldenmark und das Aschland vor der Feuerhöhle sind bewusst
+einsteigerfreundlich; Wüste, Osthochland und Finsterland sind es nicht.
 
 ## Technik
 

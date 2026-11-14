@@ -1,5 +1,5 @@
 /* ============================================================
-   ui.js  --  Fenster, Dialoge, Menues, Balken (FF-Optik)
+   ui.js  --  Fenster, Dialoge, Menüs, Balken (FF-Optik)
    ============================================================ */
 (function (global) {
   'use strict';
@@ -18,7 +18,7 @@
 
   UI.panel = function (x, y, w, h) {
     var c = GFX.ctx;
-    // Fuellung mit Verlauf
+    // Füllung mit Verlauf
     for (var i = 0; i < h; i++) {
       var t = i / Math.max(1, h - 1);
       var r = Math.round(16 + t * 12), g = Math.round(26 + t * 18), b = Math.round(74 + t * 42);
@@ -191,7 +191,7 @@
     return UI.push(modal);
   };
 
-  /* ---------- Listenmenue ---------- */
+  /* ---------- Listenmenü ---------- */
 
   /**
    * cfg: { x,y,w, rows, cols, title, items:[{label,right,color,disabled,data}],
@@ -329,7 +329,7 @@
     return UI.push(modal);
   };
 
-  /* ---------- Statuszeile Gruppe (fuer Menues) ---------- */
+  /* ---------- Statuszeile Gruppe (für Menüs) ---------- */
 
   UI.partyRow = function (a, x, y, w, showXp) {
     UI.text(a.name, x, y, a.hp > 0 ? COL.text : '#e05050');

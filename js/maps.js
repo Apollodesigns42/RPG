@@ -1,5 +1,5 @@
 /* ============================================================
-   maps.js  --  Weltkarte, Staedte, Innenraeume, Dungeons
+   maps.js  --  Weltkarte, Städte, Innenräume, Dungeons
    Alle Karten werden deterministisch erzeugt (fester Seed),
    Landmarken/NPCs/Truhen sind von Hand platziert.
    ============================================================ */
@@ -19,7 +19,7 @@
     };
   }
 
-  /* ---------- Karten-Grundgeruest ---------- */
+  /* ---------- Karten-Grundgerüst ---------- */
 
   function newMap(id, w, h, fill, opts) {
     var m = {
@@ -64,7 +64,7 @@
     aldenmark: { x: 20, y: 44, tile: T.TOWN,  to: 'aldenmark', tx: 16, ty: 24, name: 'Aldenmark' },
     selvia:    { x: 40, y: 51, tile: T.TOWN,  to: 'selvia',    tx: 16, ty: 24, name: 'Hafen Selvia' },
     nordheim:  { x: 33, y: 8,  tile: T.TOWN,  to: 'nordheim',  tx: 16, ty: 24, name: 'Nordheim' },
-    cave:      { x: 9,  y: 30, tile: T.CAVE,  to: 'cave1',     tx: -1, ty: -1, name: 'Feuerhoehle' },
+    cave:      { x: 9,  y: 30, tile: T.CAVE,  to: 'cave1',     tx: -1, ty: -1, name: 'Feuerhöhle' },
     icetemple: { x: 55, y: 9,  tile: T.CAVE,  to: 'ice1',      tx: -1, ty: -1, name: 'Eistempel' },
     windtower: { x: 61, y: 30, tile: T.TOWER, to: 'tower1',    tx: -1, ty: -1, name: 'Windturm' },
     earthruin: { x: 57, y: 47, tile: T.RUIN,  to: 'ruins1',    tx: -1, ty: -1, name: 'Erdruinen' },
@@ -96,13 +96,13 @@
         if (rnd() < chance) set(m, x, y, T.SNOW);
       }
     }
-    // Osten: Wueste
+    // Osten: Wüste
     ellipse(m, 58, 44, 14, 10, T.SAND, rnd, .35);
     ellipse(m, 62, 34, 9, 9, T.SAND, rnd, .35);
     // Westen: Vulkanland
     ellipse(m, 11, 29, 9, 9, T.VOLCANO, rnd, .4);
     ellipse(m, 11, 29, 6, 6, T.HILL, rnd, .4);
-    // Sumpf im Sueden
+    // Sumpf im Süden
     ellipse(m, 30, 50, 7, 4, T.SWAMP, rnd, .4);
 
     // --- Gebirgsketten ---
@@ -142,7 +142,7 @@
       }
     }
 
-    // --- Kuestenlinie ---
+    // --- Küstenlinie ---
     for (y = 0; y < WORLD_H; y++) {
       for (x = 0; x < WORLD_W; x++) {
         if (at(m, x, y) !== T.WATER) continue;
@@ -160,14 +160,14 @@
     road(m, L.nordheim.x, L.nordheim.y, L.icetemple.x, L.icetemple.y);
     road(m, L.icetemple.x, L.icetemple.y, L.windtower.x, L.windtower.y);
     road(m, L.windtower.x, L.windtower.y, L.earthruin.x, L.earthruin.y);
-    // Bruecke ins Finsterland (erst nach 4 Kristallen begehbar - Ereignis)
+    // Brücke ins Finsterland (erst nach 4 Kristallen begehbar - Ereignis)
     road(m, 36, 40, L.fortress.x, L.fortress.y + 6);
 
     // --- Landmarken setzen ---
     for (var key in L) {
       var lm = L[key];
       set(m, lm.x, lm.y, lm.tile);
-      // Umgebung freiraeumen
+      // Umgebung freiräumen
       for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) {
         if (dx === 0 && dy === 0) continue;
         var tt = at(m, lm.x + dx, lm.y + dy);
@@ -181,17 +181,19 @@
       }
     }
 
-    // --- Regionen fuer Zufallskaempfe ---
+    // --- Regionen für Zufallskämpfe ---
     for (y = 0; y < WORLD_H; y++) {
       for (x = 0; x < WORLD_W; x++) {
-        var tl = at(m, x, y), reg = 1;
-        if (x >= 24 && x <= 46 && y >= 20 && y <= 36) reg = 8;          // Finsterland
+        var tl = at(m, x, y), reg = 2;                                   // Wildnis
+        var da = Math.abs(x - LANDMARKS.aldenmark.x) + Math.abs(y - LANDMARKS.aldenmark.y);
+        if (da <= 9) reg = 1;                                            // direkt um Aldenmark: sanft
+        else if (x >= 24 && x <= 46 && y >= 20 && y <= 36) reg = 8;     // Finsterland
         else if (y < 18) reg = 4;                                        // Schnee
-        else if (tl === T.SAND || tl === T.PALM) reg = 3;                // Wueste
-        else if (x < 20 && y > 20 && y < 40) reg = 5;                    // Vulkan
+        else if (tl === T.SAND || tl === T.PALM) reg = 3;                // Wüste
+        else if (x < 20 && y > 20 && y < 40) reg = 5;                    // Aschland
         else if (tl === T.SWAMP || tl === T.DEADTREE) reg = 7;           // Sumpf
-        else if (tl === T.MOUNT || tl === T.HILL) reg = 6;               // Berge
-        else if (tl === T.TREE) reg = 2;                                 // Wald
+        else if (x > 48 && y < 40) reg = 6;                              // Osthochland
+        else if (da <= 16) reg = 1;                                      // Umland von Aldenmark
         m.regions[y * WORLD_W + x] = reg;
       }
     }
@@ -211,7 +213,7 @@
   M.REGION_TABLE = REGION_TABLE;
 
   function worldChest(m, x, y, data) {
-    // freie Stelle in der Naehe suchen
+    // freie Stelle in der Nähe suchen
     for (var r = 0; r < 6; r++) {
       for (var dy = -r; dy <= r; dy++) for (var dx = -r; dx <= r; dx++) {
         var tx = x + dx, ty = y + dy;
@@ -248,7 +250,7 @@
     }
   }
 
-  /** Legt einen begehbaren Weg (L-foermig) und Bruecken ueber Wasser. */
+  /** Legt einen begehbaren Weg (L-förmig) und Brücken über Wasser. */
   function road(m, x1, y1, x2, y2) {
     var x = x1, y = y1, guard = 0;
     while ((x !== x2 || y !== y2) && guard++ < 400) {
@@ -261,13 +263,13 @@
     }
   }
 
-  /* ---------- Gebaeude & Innenraeume ---------- */
+  /* ---------- Gebäude & Innenräume ---------- */
 
   function building(m, x, y, w, h, doorDX, warpTo, label) {
-    // Dach mit Ueberstand
+    // Dach mit Überstand
     fillRect(m, x - 1, y, w + 2, 1, T.ROOFTOP);
     fillRect(m, x - 1, y + 1, w + 2, 2, T.ROOF);
-    // Waende
+    // Wände
     fillRect(m, x, y + 3, w, h - 3, T.HOUSE);
     // Fenster in der oberen Wandreihe
     for (var i = 1; i < w - 1; i += 3) set(m, x + i, y + 3, T.WINDOW);
@@ -284,7 +286,7 @@
     return m;
   }
 
-  /* ---------- Staedte ---------- */
+  /* ---------- Städte ---------- */
 
   var TOWN_THEME = {
     aldenmark: { ground: T.GRASS, edge: T.TREE, music: 'town' },
@@ -313,7 +315,7 @@
     // Brunnen
     set(m, 20, 9, T.WELL);
 
-    // Gebaeude
+    // Gebäude
     var inn   = building(m, 4, 4, 8, 6, 3, id + '_inn', 'Gasthaus');
     var shopI = building(m, 21, 3, 7, 6, 3, id + '_item', 'Laden');
     var shopG = building(m, 4, 17, 8, 6, 3, id + '_gear', 'Schmiede');
@@ -327,7 +329,7 @@
     // NPCs
     def.npcs.forEach(function (n) { m.npcs.push(n); });
 
-    // Innenraeume registrieren
+    // Innenräume registrieren
     M.defs[id + '_inn'] = function () { return makeInn(id, def); };
     M.defs[id + '_item'] = function () { return makeShop(id + '_item', def.shopItem, def.shopItemNpc); };
     M.defs[id + '_gear'] = function () { return makeShop(id + '_gear', def.shopGear, def.shopGearNpc); };
@@ -336,7 +338,7 @@
     return m;
   }
 
-  /** Verbindet eine Tuer mit dem naechsten Weg. */
+  /** Verbindet eine Tür mit dem nächsten Weg. */
   function connect(m, dx, dy) {
     var y = dy + 1;
     while (y < m.h - 1 && at(m, dx, y) !== T.ROAD) { set(m, dx, y, T.ROAD); y++; }
@@ -410,7 +412,7 @@
 
     // Korridore
     for (i = 1; i < rooms.length; i++) corridor(m, rooms[i - 1], rooms[i], opts.floor, rnd);
-    // Ein paar Querverbindungen fuer Schleifen
+    // Ein paar Querverbindungen für Schleifen
     for (i = 0; i + 3 < rooms.length; i += 3) corridor(m, rooms[i], rooms[i + 3], opts.floor, rnd);
 
     // Deko
@@ -471,7 +473,7 @@
     }
 
     if (opts.boss) {
-      // Bossraum: Altar + Ausloeser davor (mehrere Felder breit)
+      // Bossraum: Altar + Auslöser davor (mehrere Felder breit)
       fillRect(m, far.x, far.y, far.w, far.h, opts.floor);
       set(m, far.cx, far.y + 1, T.ALTAR);
       m.altar = { x: far.cx, y: far.y + 1 };
@@ -483,7 +485,7 @@
       m.boss = opts.boss;
     }
 
-    // Truhen in mittleren Raeumen
+    // Truhen in mittleren Räumen
     var loot = opts.loot || [];
     var li = 0;
     rooms.forEach(function (r, i) {
@@ -509,29 +511,29 @@
   M.defs.aldenmark = function () {
     return buildTown('aldenmark', {
       name: 'Aldenmark', wx: 20, wy: 44,
-      signText: 'ALDENMARK - Herz des Koenigreichs. Norden: Schloss.',
+      signText: 'ALDENMARK - Herz des Königreichs. Norden: Schloss.',
       innPrice: 20,
       innGuest: ['Vier Kristalle halten die Welt im Gleichgewicht.',
                  'Seit Malkoth sie entweiht hat, stirbt das Land.'],
       shopItem: 'aldenmark_item',
-      shopItemNpc: { name: 'Kraeuterfrau', lines: ['Traenke retten Leben, Held.'] },
+      shopItemNpc: { name: 'Kräuterfrau', lines: ['Tränke retten Leben, Held.'] },
       shopGear: 'aldenmark_gear',
-      shopGearNpc: { name: 'Schmied Borin', lines: ['Gutes Eisen haelt laenger als gute Worte.'] },
+      shopGearNpc: { name: 'Schmied Borin', lines: ['Gutes Eisen hält länger als gute Worte.'] },
       houseNpcs: [
         { x: 5, y: 6, sprite: 'child', dir: 'down', name: 'Junge', wander: true,
-          lines: ['Wenn ich gross bin, werde ich Ritter wie Alric!'] },
+          lines: ['Wenn ich groß bin, werde ich Ritter wie Alric!'] },
         { x: 10, y: 6, sprite: 'villager', dir: 'down', name: 'Mutter',
           lines: ['Die Ernte verdorrt. Der Erdkristall schweigt.'] }
       ],
       npcs: [
         { x: 13, y: 15, sprite: 'guard', dir: 'right', name: 'Wache',
-          lines: ['Der Koenig erwartet dich im Schloss im Norden.'] },
-        { x: 22, y: 14, sprite: 'villager', dir: 'down', name: 'Buerger', wander: true,
-          lines: ['Im Westen speit der Berg Feuer. Dort war frueher Ackerland.'] },
+          lines: ['Der König erwartet dich im Schloss im Norden.'] },
+        { x: 22, y: 14, sprite: 'villager', dir: 'down', name: 'Bürger', wander: true,
+          lines: ['Im Westen speit der Berg Feuer. Dort war früher Ackerland.'] },
         { x: 19, y: 20, sprite: 'elder', dir: 'down', name: 'Alte Mira',
-          lines: ['Vier Kristalle, vier Waechter. Nur wer alle vier befreit,',
-                  'kann die Bruecke zur Finsterburg beschreiten.'] },
-        { x: 26, y: 11, sprite: 'child', dir: 'left', name: 'Maedchen', wander: true,
+          lines: ['Vier Kristalle, vier Wächter. Nur wer alle vier befreit,',
+                  'kann die Brücke zur Finsterburg beschreiten.'] },
+        { x: 26, y: 11, sprite: 'child', dir: 'left', name: 'Mädchen', wander: true,
           lines: ['Speichere oft! Im Gasthaus kannst du rasten.'] }
       ]
     });
@@ -551,21 +553,21 @@
     set(m, 5, 12, T.PILLAR); set(m, 15, 12, T.PILLAR);
     set(m, 2, 2, T.BOOK); set(m, 18, 2, T.BOOK);
 
-    m.npcs.push({ x: 10, y: 2, sprite: 'king', dir: 'down', name: 'Koenig Aldric', king: true,
+    m.npcs.push({ x: 10, y: 2, sprite: 'king', dir: 'down', name: 'König Aldric', king: true,
       lines: function (g) {
         if (g.flags.crystals >= 4) return [
           'Die vier Kristalle leuchten wieder!',
-          'Die Bruecke ins Finsterland steht offen.',
+          'Die Brücke ins Finsterland steht offen.',
           'Beende, was Malkoth begonnen hat - im Namen Aetherias!'];
         if (g.flags.quest) return [
           'Vier Kristalle, Alric. ' + g.flags.crystals + ' hast du bereits befreit.',
-          'Aetheria haelt den Atem an.'];
+          'Aetheria hält den Atem an.'];
         return ['Alric, mein treuester Hauptmann...'];
       } });
     m.npcs.push({ x: 7, y: 5, sprite: 'guard', dir: 'right', name: 'Wache',
-      lines: ['Steh dem Koenig bei, Hauptmann.'] });
+      lines: ['Steh dem König bei, Hauptmann.'] });
     m.npcs.push({ x: 13, y: 5, sprite: 'guard', dir: 'left', name: 'Wache',
-      lines: ['Die Kristallkammern liegen ausserhalb der Stadtmauern.'] });
+      lines: ['Die Kristallkammern liegen außerhalb der Stadtmauern.'] });
     m.npcs.push({ x: 4, y: 10, sprite: 'elder', dir: 'right', name: 'Hofmagier',
       lines: ['Elemente schlagen einander: Feuer schmilzt Eis,',
               'Blitz zerbricht Stein, Heiliges verzehrt Finsternis.'] });
@@ -581,14 +583,14 @@
       innGuest: ['Der Eistempel im Norden ist seit Jahren verschlossen.',
                  'Aber seit dem Beben steht das Tor offen...'],
       shopItem: 'selvia_item',
-      shopItemNpc: { name: 'Haendlerin Sae', lines: ['Frische Ware aus Uebersee!'] },
+      shopItemNpc: { name: 'Händlerin Sae', lines: ['Frische Ware aus Übersee!'] },
       shopGear: 'selvia_gear',
-      shopGearNpc: { name: 'Waffenmeister', lines: ['Der Osten ist rau. Ruest dich besser aus.'] },
+      shopGearNpc: { name: 'Waffenmeister', lines: ['Der Osten ist rau. Rüst dich besser aus.'] },
       houseNpcs: [
         { x: 5, y: 6, sprite: 'villager', dir: 'down', name: 'Fischer',
-          lines: ['Die Fische fliehen vor der Kaelte aus dem Norden.'] },
+          lines: ['Die Fische fliehen vor der Kälte aus dem Norden.'] },
         { x: 10, y: 7, sprite: 'elder', dir: 'left', name: 'Kartograf',
-          lines: ['Windturm im Osten, Erdruinen im Suedosten.',
+          lines: ['Windturm im Osten, Erdruinen im Südosten.',
                   'Und in der Mitte: die Finsterburg. Meide sie - noch.'] }
       ],
       npcs: [
@@ -597,9 +599,9 @@
         { x: 13, y: 20, sprite: 'guard', dir: 'right', name: 'Hafenwache',
           lines: ['Ohne die Kristalle wird kein Schiff mehr sicher segeln.'] },
         { x: 19, y: 10, sprite: 'faelan', dir: 'down', name: 'Faelan', recruit: 'faelan',
-          lines: ['Ihr jagt die Kristallwaechter? Wie ungeheuer unvernuenftig.',
+          lines: ['Ihr jagt die Kristallwächter? Wie ungeheuer unvernünftig.',
                   'Die Sturmakademie hat mich verbannt, weil ich zu viel wissen wollte.',
-                  'Jetzt weiss ich, was Malkoth tat - und wie man ihn aufhaelt.',
+                  'Jetzt weiß ich, was Malkoth tat - und wie man ihn aufhält.',
                   'Ich komme mit. Nicht aus Heldenmut. Aus Neugier.'] }
       ]
     });
@@ -612,26 +614,26 @@
       signText: 'NORDHEIM - Letzte Feste vor dem ewigen Eis.',
       innPrice: 150,
       innGuest: ['Sylphara, die Sturmhexe, haust im Windturm.',
-                 'Ihr Sturm hat drei Doerfer verschluckt.'],
+                 'Ihr Sturm hat drei Dörfer verschluckt.'],
       shopItem: 'nordheim_item',
-      shopItemNpc: { name: 'Haendler Sven', lines: ['Teuer, aber du lebst laenger.'] },
+      shopItemNpc: { name: 'Händler Sven', lines: ['Teuer, aber du lebst länger.'] },
       shopGear: 'nordheim_gear',
-      shopGearNpc: { name: 'Meisterschmiedin', lines: ['Nordstahl. Nichts Besseres suedlich des Eises.'] },
+      shopGearNpc: { name: 'Meisterschmiedin', lines: ['Nordstahl. Nichts Besseres südlich des Eises.'] },
       houseNpcs: [
         { x: 5, y: 6, sprite: 'elder', dir: 'down', name: 'Seherin',
-          lines: ['Malkoth war einst ein Mensch. Ein Koenig sogar.',
+          lines: ['Malkoth war einst ein Mensch. Ein König sogar.',
                   'Die Kristalle wiesen ihn ab - und er wies die Welt ab.'] },
         { x: 10, y: 6, sprite: 'child', dir: 'down', name: 'Kind', wander: true,
-          lines: ['Kalt hier, oder? Der Eiskristall schlaeft.'] }
+          lines: ['Kalt hier, oder? Der Eiskristall schläft.'] }
       ],
       npcs: [
         { x: 22, y: 14, sprite: 'guard', dir: 'down', name: 'Nordwache',
           lines: ['Der Eistempel liegt im Osten. Nimm Feuerzauber mit.'] },
-        { x: 13, y: 9, sprite: 'villager', dir: 'right', name: 'Jaeger', wander: true,
-          lines: ['Frostwoelfe jagen im Rudel. Trenne sie nicht - toete sie schnell.'] },
+        { x: 13, y: 9, sprite: 'villager', dir: 'right', name: 'Jäger', wander: true,
+          lines: ['Frostwölfe jagen im Rudel. Trenne sie nicht - töte sie schnell.'] },
         { x: 19, y: 20, sprite: 'nyx', dir: 'left', name: 'Nyx', recruit: 'nyx',
           lines: ['Steh still. Ich habe dir gerade den Beutel abgenommen -',
-                  'und wieder zurueckgelegt. Du hast nichts gemerkt.',
+                  'und wieder zurückgelegt. Du hast nichts gemerkt.',
                   'Malkoths Schatten haben mein Dorf verschluckt.',
                   'Ich gehe mit euch. Und ich nehme mir, was ich brauche.'] }
       ]
@@ -648,16 +650,16 @@
     };
   }
 
-  // Feuerhoehle: 2 Ebenen
+  // Feuerhöhle: 2 Ebenen
   dungeonDef('cave1', 90210, {
-    name: 'Feuerhoehle B1', floor: T.LAVAFLOOR, wall: T.LAVAWALL, rooms: 9, dark: .55,
+    name: 'Feuerhöhle B1', floor: T.LAVAFLOOR, wall: T.LAVAWALL, rooms: 9, dark: .55,
     encounter: 'cave_fire', rate: .10, w: 40, h: 34,
     up: { to: 'world', tx: 9, ty: 31 },
     down: { to: 'cave2', tx: -1, ty: -1 },
     loot: [{ item: 'trank' }, { gold: 200 }, { item: 'sword2' }, { item: 'hitrank' }]
   });
   dungeonDef('cave2', 90211, {
-    name: 'Feuerhoehle B2', floor: T.LAVAFLOOR, wall: T.LAVAWALL, rooms: 8, dark: .6,
+    name: 'Feuerhöhle B2', floor: T.LAVAFLOOR, wall: T.LAVAWALL, rooms: 8, dark: .6,
     encounter: 'cave_fire', rate: .11, w: 38, h: 32,
     up: { to: 'cave1', tx: -1, ty: -1 },
     boss: { event: 'boss_fire', enemy: 'boss_dragon', crystal: 'fire',
@@ -719,7 +721,7 @@
     encounter: 'ruins_earth', rate: .12, w: 40, h: 34,
     up: { to: 'ruins1', tx: -1, ty: -1 },
     boss: { event: 'boss_earth', enemy: 'boss_titan', crystal: 'earth',
-            music: 'boss', intro: 'Terramoth, der Erdtitan, waelzt sich empor!' },
+            music: 'boss', intro: 'Terramoth, der Erdtitan, wälzt sich empor!' },
     loot: [{ item: 'xtrank' }, { item: 'phoenix' }, { gold: 1600 }]
   });
 
@@ -743,7 +745,7 @@
     encounter: 'fortress', rate: .10, w: 36, h: 32,
     up: { to: 'dark2', tx: -1, ty: -1 },
     boss: { event: 'boss_final', enemy: 'boss_dark', crystal: null,
-            music: 'boss', intro: 'Malkoth, der Schattenfuerst, erwartet euch.' },
+            music: 'boss', intro: 'Malkoth, der Schattenfürst, erwartet euch.' },
     loot: [{ item: 'xtrank' }, { item: 'elixier' }]
   });
 
@@ -753,7 +755,7 @@
     if (M.cache[id]) return M.cache[id];
     var def = M.defs[id];
     if (!def) {
-      // Innenraeume werden erst beim Bau der Stadt registriert
+      // Innenräume werden erst beim Bau der Stadt registriert
       var base = id.split('_')[0];
       if (base !== id && M.defs[base]) { M.get(base); def = M.defs[id]; }
     }
@@ -767,7 +769,7 @@
 
   /** Findet den passenden Eingangspunkt beim Betreten einer Karte. */
   M.entryFor = function (map, fromId) {
-    // Treppe/Tuer, die zurueck fuehrt
+    // Treppe/Tür, die zurück führt
     for (var i = 0; i < map.warps.length; i++) {
       var w = map.warps[i];
       if (w.to === fromId) return { x: w.x, y: w.y };

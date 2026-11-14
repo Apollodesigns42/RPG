@@ -1,6 +1,6 @@
 /* ============================================================
    world.js  --  Erkundung: Bewegung, NPCs, Truhen, Warps,
-                 Zufallskaempfe, Beleuchtung
+                 Zufallskämpfe, Beleuchtung
    ============================================================ */
 (function (global) {
   'use strict';
@@ -50,6 +50,7 @@
     if (m.name) { W.bannerText = m.name; W.banner = 2.4; }
     Game.mapId = mapId;
     Game.px = tx; Game.py = ty;
+    if (mapId === 'world') { Game.wx = tx; Game.wy = ty; }
     if (m.music) Sound.play(m.music);
     // NPC-Startpositionen sichern
     m.npcs.forEach(function (n) {
@@ -103,7 +104,7 @@
     if (W.banner > 0) W.banner -= dt;
     if (W.blocked > 0) W.blocked -= dt;
 
-    // Uebergang (Fade) zwischen Karten
+    // Übergang (Fade) zwischen Karten
     if (W.transition > 0) {
       W.transition -= dt;
       if (W.transition <= 0 && W.transTo) {
@@ -162,6 +163,7 @@
   function onArrive(input) {
     W.justWarpedTile = false;
     Game.px = W.x; Game.py = W.y;
+    if (W.map.id === 'world') { Game.wx = W.x; Game.wy = W.y; }
 
     // Warp?
     var wp = warpAt(W.x, W.y);
@@ -258,7 +260,7 @@
 
     var t = tileAt(tx, ty);
 
-    // Ueber eine Ladentheke hinweg ansprechen
+    // Über eine Ladentheke hinweg ansprechen
     if (t === GFX.TILE.COUNTER) {
       var beyond = npcAt(tx + d.dx, ty + d.dy);
       if (beyond) { talkTo(beyond); return; }
@@ -273,7 +275,7 @@
       if (boss && Game.flags.events[boss.event]) {
         var cr = boss.crystal ? Data.CRYSTALS.filter(function (c) { return c.id === boss.crystal; })[0] : null;
         UI.say(cr ? ['Der ' + cr.name + ' pulsiert in reinem Licht.',
-                     'Seine Kraft stroemt zurueck in die Welt.']
+                     'Seine Kraft strömt zurück in die Welt.']
                   : ['Ein leerer Sockel. Hier endete alles.']);
       } else {
         UI.say(['Ein alter Sockel. Etwas Machtvolles ruht hier.']);
@@ -285,11 +287,11 @@
     if (ev) { Game.runEvent(ev, W.map); return; }
 
     // Bett im Gasthaus
-    if (t === GFX.TILE.BED) { UI.say('Ein weiches Bett. Der Wirt kuemmert sich um die Buchung.'); return; }
+    if (t === GFX.TILE.BED) { UI.say('Ein weiches Bett. Der Wirt kümmert sich um die Buchung.'); return; }
     if (t === GFX.TILE.BOOK) { UI.say(randomLore()); return; }
     if (t === GFX.TILE.WELL) { UI.say('Ein tiefer Brunnen. Das Wasser ist klar und kalt.'); return; }
     if (t === GFX.TILE.POT) { UI.say('Nur ein Tontopf. Leer.'); return; }
-    if (t === GFX.TILE.GRAVE) { UI.say('Ein namenloses Grab. Moege es ruhen.'); return; }
+    if (t === GFX.TILE.GRAVE) { UI.say('Ein namenloses Grab. Möge es ruhen.'); return; }
   };
 
   var LORE = [
@@ -381,7 +383,7 @@
       var set = Sprites.hero[lead ? lead.sprite : 'alric'];
       drawChar(set, px, py, W.dir, W.moving ? W.frame : 0);
     } });
-    // Begleiter (dezent hinter dem Anfuehrer)
+    // Begleiter (dezent hinter dem Anführer)
     drawables.sort(function (a, b) { return a.y - b.y; });
     drawables.forEach(function (d) { d.draw(); });
 

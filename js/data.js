@@ -1,6 +1,6 @@
 /* ============================================================
-   data.js  --  Charakterklassen, Zauber, Faehigkeiten, Items,
-                Ausruestung, Gegner, Bosse, Begegnungstabellen
+   data.js  --  Charakterklassen, Zauber, Fähigkeiten, Items,
+                Ausrüstung, Gegner, Bosse, Begegnungstabellen
    ============================================================ */
 (function (global) {
   'use strict';
@@ -33,17 +33,17 @@
   /* ---------- Zauber ---------- */
 
   D.SPELLS = {
-    // Weissmagie
-    heal:     { name: 'Heilung',      mp: 5,  kind: 'heal',  power: 70,  target: 'ally',   sfx: 'heal', desc: 'Heilt einen Verbuendeten.' },
+    // Weißmagie
+    heal:     { name: 'Heilung',      mp: 5,  kind: 'heal',  power: 70,  target: 'ally',   sfx: 'heal', desc: 'Heilt einen Verbündeten.' },
     healall:  { name: 'Vitalstrom',   mp: 14, kind: 'heal',  power: 60,  target: 'allies', sfx: 'heal', desc: 'Heilt die ganze Gruppe.' },
-    heal2:    { name: 'Gr. Heilung',  mp: 18, kind: 'heal',  power: 200, target: 'ally',   sfx: 'heal', desc: 'Heilt einen Verbuendeten stark.' },
+    heal2:    { name: 'Gr. Heilung',  mp: 18, kind: 'heal',  power: 200, target: 'ally',   sfx: 'heal', desc: 'Heilt einen Verbündeten stark.' },
     healall2: { name: 'Lebensquell',  mp: 32, kind: 'heal',  power: 170, target: 'allies', sfx: 'heal', desc: 'Heilt die Gruppe stark.' },
     cure:     { name: 'Reinigung',    mp: 6,  kind: 'cure',  target: 'ally',   sfx: 'holy', desc: 'Entfernt alle Statusleiden.' },
     revive:   { name: 'Wiederbelebg', mp: 22, kind: 'revive', power: .5, target: 'ally',   sfx: 'holy', desc: 'Belebt einen Gefallenen wieder.' },
-    protect:  { name: 'Schutz',       mp: 8,  kind: 'buff',  stat: 'def', amount: .6, turns: 6, target: 'allies', sfx: 'magic', desc: 'Erhoeht die Abwehr der Gruppe.' },
-    aura:     { name: 'Aura',         mp: 16, kind: 'buff',  stat: 'atk', amount: .5, turns: 6, target: 'allies', sfx: 'magic', desc: 'Erhoeht den Angriff der Gruppe.' },
+    protect:  { name: 'Schutz',       mp: 8,  kind: 'buff',  stat: 'def', amount: .6, turns: 6, target: 'allies', sfx: 'magic', desc: 'Erhöht die Abwehr der Gruppe.' },
+    aura:     { name: 'Aura',         mp: 16, kind: 'buff',  stat: 'atk', amount: .5, turns: 6, target: 'allies', sfx: 'magic', desc: 'Erhöht den Angriff der Gruppe.' },
     holy:     { name: 'Heiligstrahl', mp: 10, kind: 'mag',   element: 'holy', power: 60,  target: 'enemy', sfx: 'holy', desc: 'Heiliger Schaden an einem Gegner.' },
-    judicium: { name: 'Judicium',     mp: 40, kind: 'mag',   element: 'holy', power: 150, target: 'enemies', sfx: 'holy', desc: 'Heiliges Gericht ueber alle Gegner.' },
+    judicium: { name: 'Judicium',     mp: 40, kind: 'mag',   element: 'holy', power: 150, target: 'enemies', sfx: 'holy', desc: 'Heiliges Gericht über alle Gegner.' },
 
     // Schwarzmagie
     fire:     { name: 'Feuer',   mp: 4,  kind: 'mag', element: 'fire',    power: 45,  target: 'enemy',   sfx: 'fire',    desc: 'Feuerschaden an einem Gegner.' },
@@ -57,17 +57,17 @@
     thundaga: { name: 'Blitzga', mp: 26, kind: 'mag', element: 'thunder', power: 135, target: 'enemies', sfx: 'thunder', desc: 'Gewitter auf alle Gegner.' },
     quake:    { name: 'Beben',   mp: 20, kind: 'mag', element: 'earth',   power: 120, target: 'enemies', sfx: 'quake',   desc: 'Erdschaden an allen Gegnern.' },
     meteor:   { name: 'Meteor',  mp: 48, kind: 'mag', element: 'none',    power: 230, target: 'enemies', sfx: 'quake',   desc: 'Meteore vernichten alle Gegner.' },
-    sleepz:   { name: 'Schlaflied', mp: 6,  kind: 'status', status: 'sleep',   chance: .7, target: 'enemies', sfx: 'magic', desc: 'Schlaefert Gegner ein.' },
-    weaken:   { name: 'Schwaeche',  mp: 9,  kind: 'debuff', stat: 'def', amount: -.4, turns: 5, target: 'enemy', sfx: 'magic', desc: 'Senkt die Abwehr eines Gegners.' },
+    sleepz:   { name: 'Schlaflied', mp: 6,  kind: 'status', status: 'sleep',   chance: .7, target: 'enemies', sfx: 'magic', desc: 'Schläfert Gegner ein.' },
+    weaken:   { name: 'Schwäche',  mp: 9,  kind: 'debuff', stat: 'def', amount: -.4, turns: 5, target: 'enemy', sfx: 'magic', desc: 'Senkt die Abwehr eines Gegners.' },
     poisonz:  { name: 'Giftwolke',  mp: 8,  kind: 'status', status: 'poison', chance: .8, target: 'enemies', sfx: 'magic', desc: 'Vergiftet alle Gegner.' }
   };
 
-  /* ---------- Faehigkeiten (koerperlich) ---------- */
+  /* ---------- Fähigkeiten (körperlich) ---------- */
 
   D.ABILITIES = {
     power:    { name: 'Kraftschlag',   mp: 3,  kind: 'phys', mult: 1.9, target: 'enemy',   sfx: 'hit',  desc: 'Ein wuchtiger Hieb.' },
-    taunt:    { name: 'Provozieren',   mp: 2,  kind: 'taunt', turns: 3, target: 'self',    sfx: 'guard', desc: 'Zieht Angriffe auf dich und erhoeht die Abwehr.' },
-    shield:   { name: 'Schildwall',    mp: 9,  kind: 'buff', stat: 'def', amount: .9, turns: 4, target: 'allies', sfx: 'guard', desc: 'Schuetzt die ganze Gruppe.' },
+    taunt:    { name: 'Provozieren',   mp: 2,  kind: 'taunt', turns: 3, target: 'self',    sfx: 'guard', desc: 'Zieht Angriffe auf dich und erhöht die Abwehr.' },
+    shield:   { name: 'Schildwall',    mp: 9,  kind: 'buff', stat: 'def', amount: .9, turns: 4, target: 'allies', sfx: 'guard', desc: 'Schützt die ganze Gruppe.' },
     charge:   { name: 'Sturmangriff',  mp: 7,  kind: 'phys', mult: 2.6, selfDef: -.3, target: 'enemy', sfx: 'crit', desc: 'Enorme Wucht, aber offene Deckung.' },
     whirl:    { name: 'Klingenwirbel', mp: 12, kind: 'phys', mult: 1.15, target: 'enemies', sfx: 'hit', desc: 'Trifft alle Gegner.' },
     laststand:{ name: 'Letzte Bastion', mp: 20, kind: 'laststand', target: 'self',   sfx: 'holy', desc: 'Heilt dich und verdoppelt deine Abwehr.' },
@@ -76,9 +76,9 @@
     steal:    { name: 'Stehlen',       mp: 0,  kind: 'steal', target: 'enemy', sfx: 'item', desc: 'Stiehlt einem Gegner etwas.' },
     poisondag:{ name: 'Giftdolch',     mp: 5,  kind: 'phys', mult: 1.1, status: 'poison', chance: .75, target: 'enemy', sfx: 'hit', desc: 'Vergiftet das Ziel.' },
     smoke:    { name: 'Rauchbombe',    mp: 6,  kind: 'status', status: 'blind', chance: .8, target: 'enemies', sfx: 'wind', desc: 'Blendet alle Gegner.' },
-    shadow:   { name: 'Schattenschritt', mp: 8, kind: 'evade', turns: 3, target: 'self', sfx: 'wind', desc: 'Stark erhoehte Ausweichchance.' },
+    shadow:   { name: 'Schattenschritt', mp: 8, kind: 'evade', turns: 3, target: 'self', sfx: 'wind', desc: 'Stark erhöhte Ausweichchance.' },
     weakpoint:{ name: 'Schwachpunkt',  mp: 11, kind: 'phys', mult: 1.6, pierce: true, target: 'enemy', sfx: 'crit', desc: 'Ignoriert die Abwehr des Ziels.' },
-    thousand: { name: 'Tausend Klingen', mp: 26, kind: 'phys', mult: .8, hits: 4, random: true, target: 'enemies', sfx: 'crit', desc: 'Vier Treffer auf zufaellige Gegner.' }
+    thousand: { name: 'Tausend Klingen', mp: 26, kind: 'phys', mult: .8, hits: 4, random: true, target: 'enemies', sfx: 'crit', desc: 'Vier Treffer auf zufällige Gegner.' }
   };
 
   /* ---------- Items ---------- */
@@ -89,7 +89,7 @@
     xtrank:   { name: 'X-Trank',      price: 900,  kind: 'heal',   power: 9999, target: 'ally',  battle: true, desc: 'Stellt alle KP her.' },
     aether:   { name: 'Aether',       price: 400,  kind: 'mp',     power: 60,  target: 'ally',   battle: true, desc: 'Stellt 60 MP her.' },
     elixier:  { name: 'Elixier',      price: 2000, kind: 'full',   target: 'ally',   battle: true, desc: 'Stellt KP und MP komplett her.' },
-    phoenix:  { name: 'Phoenixfeder', price: 250,  kind: 'revive', power: .5,  target: 'ally',   battle: true, desc: 'Belebt einen Gefallenen wieder.' },
+    phoenix:  { name: 'Phönixfeder', price: 250,  kind: 'revive', power: .5,  target: 'ally',   battle: true, desc: 'Belebt einen Gefallenen wieder.' },
     antidot:  { name: 'Antidot',      price: 40,   kind: 'cure',   status: 'poison', target: 'ally', battle: true, desc: 'Heilt Gift.' },
     augentr:  { name: 'Augentropfen', price: 40,   kind: 'cure',   status: 'blind',  target: 'ally', battle: true, desc: 'Heilt Blindheit.' },
     wachruf:  { name: 'Weckruf',      price: 40,   kind: 'cure',   status: 'sleep',  target: 'ally', battle: true, desc: 'Weckt Schlafende.' },
@@ -98,11 +98,11 @@
     bombe:    { name: 'Feuerbombe',   price: 180,  kind: 'attack', element: 'fire',    power: 140, target: 'enemies', battle: true, sfx: 'fire',    desc: 'Feuerschaden an allen Gegnern.' },
     frostkug: { name: 'Frostkugel',   price: 180,  kind: 'attack', element: 'ice',     power: 140, target: 'enemies', battle: true, sfx: 'ice',     desc: 'Eisschaden an allen Gegnern.' },
     donnerst: { name: 'Donnerstein',  price: 180,  kind: 'attack', element: 'thunder', power: 140, target: 'enemies', battle: true, sfx: 'thunder', desc: 'Blitzschaden an allen Gegnern.' },
-    zelt:     { name: 'Zelt',         price: 350,  kind: 'tent',   target: 'party',  battle: false, desc: 'Stellt die Gruppe ausserhalb von Kaempfen her.' },
+    zelt:     { name: 'Zelt',         price: 350,  kind: 'tent',   target: 'party',  battle: false, desc: 'Stellt die Gruppe außerhalb von Kämpfen her.' },
     kristallsplitter: { name: 'Kristallsplitter', price: 0, kind: 'key', desc: 'Ein Splitter reinen Kristalllichts.' }
   };
 
-  /* ---------- Ausruestung ---------- */
+  /* ---------- Ausrüstung ---------- */
 
   function W(id, name, kind, price, mods, desc, el) {
     D.EQUIP[id] = { id: id, name: name, slot: 'weapon', kind: kind, price: price, mods: mods, desc: desc || '', element: el };
@@ -117,9 +117,9 @@
   W('sword1', 'Kurzschwert',   'sword', 120,  { atk: 8 });
   W('sword2', 'Breitschwert',  'sword', 600,  { atk: 18 });
   W('sword3', 'Ritterklinge',  'sword', 2200, { atk: 32, def: 4 });
-  W('sword4', 'Drachentoeter', 'sword', 6000, { atk: 48, spd: 2 }, 'Gegen Drachen besonders wirksam.');
+  W('sword4', 'Drachentöter', 'sword', 6000, { atk: 48, spd: 2 }, 'Gegen Drachen besonders wirksam.');
   W('sword5', 'Aetherklinge',  'sword', 0,    { atk: 66, mag: 10 }, 'Klinge aus reinem Kristalllicht.', 'holy');
-  // Staebe (Lyra)
+  // Stäbe (Lyra)
   W('staff1', 'Eichenstab',    'staff', 100,  { atk: 5, mag: 4 });
   W('staff2', 'Silberstab',    'staff', 520,  { atk: 9, mag: 11 });
   W('staff3', 'Segensstab',    'staff', 2000, { atk: 14, mag: 22, res: 6 });
@@ -135,30 +135,30 @@
   W('dag3',   'Schattenklinge','dagger', 2100,{ atk: 29, spd: 5, luk: 4 });
   W('dag4',   'Mondsichel',    'dagger', 5800,{ atk: 44, spd: 8, luk: 8 });
 
-  // Schwere Ruestung
-  A('hv1', 'Lederruestung',  'armor', 'heavy', 130,  { def: 6 });
+  // Schwere Rüstung
+  A('hv1', 'Lederrüstung',  'armor', 'heavy', 130,  { def: 6 });
   A('hv2', 'Kettenpanzer',   'armor', 'heavy', 620,  { def: 14 });
   A('hv3', 'Ritterplatte',   'armor', 'heavy', 2300, { def: 24, res: 6 });
   A('hv4', 'Drachenpanzer',  'armor', 'heavy', 6200, { def: 36, res: 12, spd: -1 });
   // Roben
   A('rb1', 'Stoffrobe',      'armor', 'robe', 110,  { def: 4, res: 5 });
   A('rb2', 'Magierrobe',     'armor', 'robe', 520,  { def: 8, res: 12 });
-  A('rb3', 'Weisse Robe',    'armor', 'robe', 2000, { def: 13, res: 21, mag: 4 });
+  A('rb3', 'Weiße Robe',    'armor', 'robe', 2000, { def: 13, res: 21, mag: 4 });
   A('rb4', 'Sternenrobe',    'armor', 'robe', 5600, { def: 19, res: 32, mag: 10 });
-  // Leichte Ruestung
+  // Leichte Rüstung
   A('lt1', 'Lederwams',      'armor', 'light', 120, { def: 5, spd: 1 });
   A('lt2', 'Nachtmantel',    'armor', 'light', 560, { def: 11, spd: 2 });
   A('lt3', 'Schattenrobe',   'armor', 'light', 2100,{ def: 18, spd: 4, luk: 3 });
   A('lt4', 'Windschleier',   'armor', 'light', 5800,{ def: 27, spd: 7, luk: 6 });
 
-  // Accessoires (fuer alle)
+  // Accessoires (für alle)
   A('ac1', 'Kraftring',      'acc', 'acc', 700,  { atk: 10 });
   A('ac2', 'Schutzamulett',  'acc', 'acc', 700,  { def: 9 });
   A('ac3', 'Magiering',      'acc', 'acc', 900,  { mag: 12 });
   A('ac4', 'Flinke Stiefel', 'acc', 'acc', 900,  { spd: 8 });
-  A('ac5', 'Gluecksmuenze',  'acc', 'acc', 800,  { luk: 12 });
+  A('ac5', 'Glücksmünze',  'acc', 'acc', 800,  { luk: 12 });
   A('ac6', 'Elfenreif',      'acc', 'acc', 1400, { mag: 6, res: 10, mp: 25 });
-  A('ac7', 'Kristallanhaeng','acc', 'acc', 4000, { atk: 6, def: 6, mag: 6, res: 6, spd: 3 });
+  A('ac7', 'Kristallkette','acc', 'acc', 4000, { atk: 6, def: 6, mag: 6, res: 6, spd: 3 });
 
   D.SLOT_KINDS = {
     alric:  { weapon: ['sword'],  armor: ['heavy', 'light'] },
@@ -177,11 +177,11 @@
       abilities: [[1, 'power'], [3, 'taunt'], [7, 'shield'], [12, 'charge'], [18, 'whirl'], [26, 'laststand']],
       spells: [],
       equip: { weapon: 'sword1', armor: 'hv1', acc: null },
-      cmd: ['Angriff', 'Faehigkeit', 'Item', 'Verteidigen'],
+      cmd: ['Angriff', 'Fähigkeit', 'Item', 'Verteidigen'],
       bio: 'Hauptmann der Wache von Aldenmark. Standhaft und pflichtbewusst.'
     },
     lyra: {
-      id: 'lyra', name: 'Lyra', cls: 'Weissmagierin', sprite: 'lyra',
+      id: 'lyra', name: 'Lyra', cls: 'Weißmagierin', sprite: 'lyra',
       base: { hp: 32, mp: 20, atk: 7, def: 7, mag: 14, res: 13, spd: 9, luk: 8 },
       grow: { hp: 6.0, mp: 3.8, atk: 1.0, def: 1.3, mag: 2.5, res: 2.1, spd: 1.1, luk: 1.0 },
       abilities: [],
@@ -211,15 +211,16 @@
                   [12, 'shadow'], [16, 'weakpoint'], [24, 'thousand']],
       spells: [],
       equip: { weapon: 'dag1', armor: 'lt1', acc: null },
-      cmd: ['Angriff', 'Faehigkeit', 'Item', 'Verteidigen'],
-      bio: 'Diebin aus den Nordmarken. Loyal gegenueber denen, die sie sich verdient.'
+      cmd: ['Angriff', 'Fähigkeit', 'Item', 'Verteidigen'],
+      bio: 'Diebin aus den Nordmarken. Loyal gegenüber denen, die sie sich verdient.'
     }
   };
 
   /* ---------- Erfahrungskurve ---------- */
 
   D.xpToNext = function (lvl) {
-    return Math.round(24 * Math.pow(lvl, 1.72) + 16 * lvl);
+    // An den typischen Spielverlauf angepasst: ohne Grinden ~Stufe 11/19/26/31/39 vor den Bossen
+    return Math.round(5 * Math.pow(lvl, 1.75) + 15);
   };
 
   D.MAX_LEVEL = 50;
@@ -230,13 +231,20 @@
   D.ENEMIES = {};
 
   // -- Region: Grasland --
-  mk('slime',      { name: 'Gruenschleim',   sprite: 'slime',      hp: 30,  atk: 7,  def: 5,  mag: 4,  res: 4,  spd: 5,  exp: 8,   gold: 10,  weak: ['fire'], resist: ['water'], drop: ['trank', .14] });
-  mk('bat',        { name: 'Hoehlenfledermaus', sprite: 'bat',     hp: 24,  atk: 8,  def: 4,  mag: 5,  res: 5,  spd: 14, exp: 9,   gold: 12,  weak: ['wind'], drop: ['antidot', .12] });
+  mk('slime',      { name: 'Grünschleim',   sprite: 'slime',      hp: 30,  atk: 7,  def: 5,  mag: 4,  res: 4,  spd: 5,  exp: 8,   gold: 10,  weak: ['fire'], resist: ['water'], drop: ['trank', .14] });
+  mk('bat',        { name: 'Höhlenfledermaus', sprite: 'bat',     hp: 24,  atk: 8,  def: 4,  mag: 5,  res: 5,  spd: 14, exp: 9,   gold: 12,  weak: ['wind'], drop: ['antidot', .12] });
   mk('wolf',       { name: 'Steppenwolf',    sprite: 'wolf',       hp: 40,  atk: 11, def: 7,  mag: 3,  res: 5,  spd: 12, exp: 14,  gold: 16,  weak: ['ice'], drop: ['trank', .14] });
   mk('goblin',     { name: 'Goblin',         sprite: 'goblin',     hp: 48,  atk: 12, def: 9,  mag: 4,  res: 6,  spd: 8,  exp: 17,  gold: 24,  drop: ['trank', .16],
                      skills: [{ name: 'Keulenhieb', kind: 'phys', mult: 1.4, weight: 22 }] });
-  mk('plant',      { name: 'Rankenwuerger',  sprite: 'plant',      hp: 60,  atk: 13, def: 12, mag: 8,  res: 8,  spd: 4,  exp: 18,  gold: 18,  weak: ['fire'], resist: ['earth'],
+  mk('plant',      { name: 'Rankenwürger',  sprite: 'plant',      hp: 60,  atk: 13, def: 12, mag: 8,  res: 8,  spd: 4,  exp: 18,  gold: 18,  weak: ['fire'], resist: ['earth'],
                      skills: [{ name: 'Giftsporen', kind: 'status', status: 'poison', chance: .6, target: 'enemies', weight: 30, sfx: 'wind' }] });
+
+  // -- Region: Aschland & Feuerhöhle (früh) --
+  mk('slime_ember',{ name: 'Glutschleim',    sprite: 'slime_fire', hp: 54,  atk: 13, def: 8,  mag: 10, res: 8,  spd: 6,  exp: 26,  gold: 26,  weak: ['ice'], resist: ['fire'], drop: ['trank', .15],
+                     skills: [{ name: 'Funkenspritzer', kind: 'mag', element: 'fire', power: 30, weight: 30, sfx: 'fire' }] });
+  mk('imp',        { name: 'Feuerkobold',    sprite: 'imp',        hp: 62,  atk: 17, def: 10, mag: 9,  res: 8,  spd: 11, exp: 30,  gold: 34,  weak: ['ice'], resist: ['fire'], drop: ['antidot', .12],
+                     skills: [{ name: 'Glutwurf', kind: 'mag', element: 'fire', power: 34, weight: 25, sfx: 'fire' },
+                              { name: 'Kratzer', kind: 'phys', mult: 1.4, weight: 20 }] });
 
   // -- Region: Wald & Sumpf --
   mk('wisp',       { name: 'Irrlicht',       sprite: 'wisp',       hp: 48,  atk: 9,  def: 8,  mag: 18, res: 16, spd: 13, exp: 20,  gold: 24,  weak: ['thunder'], resist: ['fire', 'ice'],
@@ -249,8 +257,8 @@
   mk('skeleton',   { name: 'Skelettkrieger', sprite: 'skeleton',   hp: 78,  atk: 24, def: 16, mag: 5,  res: 10, spd: 9,  exp: 32,  gold: 40,  weak: ['holy'], resist: ['dark', 'ice'], immune: ['poison'],
                      skills: [{ name: 'Knochenhieb', kind: 'phys', mult: 1.6, weight: 30 }] });
 
-  // -- Region: Wueste --
-  mk('bandit',     { name: 'Wuestenraeuber', sprite: 'bandit',     hp: 92,  atk: 30, def: 18, mag: 6,  res: 10, spd: 16, exp: 46,  gold: 90,  drop: ['hitrank', .12],
+  // -- Region: Wüste --
+  mk('bandit',     { name: 'Wüstenräuber', sprite: 'bandit',     hp: 92,  atk: 30, def: 18, mag: 6,  res: 10, spd: 16, exp: 46,  gold: 90,  drop: ['hitrank', .12],
                      skills: [{ name: 'Doppelhieb', kind: 'phys', mult: .9, hits: 2, weight: 35 },
                               { name: 'Sandwurf', kind: 'status', status: 'blind', chance: .6, weight: 20, sfx: 'wind' }] });
   mk('serpent',    { name: 'Sandwurm',       sprite: 'serpent',    hp: 120, atk: 34, def: 22, mag: 8,  res: 12, spd: 8,  exp: 58,  gold: 70,  weak: ['ice'], resist: ['earth'],
@@ -272,8 +280,8 @@
                      skills: [{ name: 'Windschnitt', kind: 'mag', element: 'wind', power: 85, target: 'enemies', weight: 35, sfx: 'wind' },
                               { name: 'Stille', kind: 'status', status: 'silence', chance: .6, weight: 15, sfx: 'magic' }] });
   mk('knight',     { name: 'Verlorene Wache', sprite: 'knight',    hp: 196, atk: 46, def: 40, mag: 10, res: 20, spd: 12, exp: 96,  gold: 150, weak: ['thunder'], immune: ['poison'],
-                     skills: [{ name: 'Wuchtstoss', kind: 'phys', mult: 2.0, weight: 30 },
-                              { name: 'Schildstoss', kind: 'phys', mult: 1.2, status: 'blind', chance: .5, weight: 15 }] });
+                     skills: [{ name: 'Wuchtstoß', kind: 'phys', mult: 2.0, weight: 30 },
+                              { name: 'Schildstoß', kind: 'phys', mult: 1.2, status: 'blind', chance: .5, weight: 15 }] });
 
   // -- Region: Vulkan --
   mk('slime_fire', { name: 'Magmaschleim',   sprite: 'slime_fire', hp: 130, atk: 32, def: 22, mag: 22, res: 22, spd: 7,  exp: 66,  gold: 70,  weak: ['ice'], resist: ['fire'], immune: ['poison'],
@@ -286,7 +294,7 @@
                               { name: 'Klauenhieb', kind: 'phys', mult: 1.9, weight: 30 }] });
 
   // -- Region: Finsterland --
-  mk('skeleton_d', { name: 'Grabwaechter',   sprite: 'skeleton_d', hp: 240, atk: 58, def: 42, mag: 26, res: 30, spd: 14, exp: 150, gold: 190, weak: ['holy'], resist: ['dark', 'ice'], immune: ['poison', 'sleep'],
+  mk('skeleton_d', { name: 'Grabwächter',   sprite: 'skeleton_d', hp: 240, atk: 58, def: 42, mag: 26, res: 30, spd: 14, exp: 150, gold: 190, weak: ['holy'], resist: ['dark', 'ice'], immune: ['poison', 'sleep'],
                      skills: [{ name: 'Seelenschnitt', kind: 'drain', mult: 1.3, weight: 30, sfx: 'dark' },
                               { name: 'Grabesfluch', kind: 'status', status: 'slow', chance: .6, target: 'enemies', weight: 15, sfx: 'dark' }] });
   mk('wisp_dark',  { name: 'Schattenauge',   sprite: 'wisp_dark',  hp: 200, atk: 34, def: 28, mag: 46, res: 40, spd: 20, exp: 158, gold: 200, weak: ['holy'], resist: ['dark'],
@@ -349,11 +357,11 @@
   });
 
   mk('boss_dark', {
-    name: 'Malkoth', title: 'Der Schattenfuerst', sprite: 'boss_dark', boss: true, final: true,
+    name: 'Malkoth', title: 'Der Schattenfürst', sprite: 'boss_dark', boss: true, final: true,
     hp: 9500, atk: 96, def: 70, mag: 92, res: 62, spd: 20, exp: 9999, gold: 9999,
     weak: ['holy'], resist: ['dark', 'fire', 'ice', 'thunder'], immune: ['poison', 'sleep', 'blind', 'silence', 'slow'],
     skills: [
-      { name: 'Finsternisstoss', kind: 'mag', element: 'dark', power: 140, target: 'enemies', weight: 26, sfx: 'dark' },
+      { name: 'Finsternisstoß', kind: 'mag', element: 'dark', power: 140, target: 'enemies', weight: 26, sfx: 'dark' },
       { name: 'Schattenklinge', kind: 'phys', mult: 2.4, element: 'dark', weight: 26 },
       { name: 'Seelenraub', kind: 'drain', mult: 2.0, weight: 18, sfx: 'dark' },
       { name: 'Verzweiflung', kind: 'debuffall', stat: 'def', amount: -.4, turns: 4, weight: 10, sfx: 'dark' },
@@ -369,19 +377,19 @@
     swamp:    [['plant', 3], ['bat_shadow', 2], ['goblin_sh', 2], ['skeleton', 1]],
     desert:   [['bandit', 3], ['serpent', 2], ['plant_d', 2], ['golem', 1]],
     snow:     [['slime_ice', 3], ['wolf_ice', 3], ['wisp_wind', 2], ['skeleton', 2]],
-    volcano:  [['slime_fire', 3], ['golem_fire', 2], ['serpent_d', 1], ['bat_shadow', 2]],
+    volcano:  [['slime_ember', 3], ['imp', 2], ['wolf', 2], ['bat', 2]],
     mountain: [['wisp_wind', 3], ['knight', 2], ['skeleton', 2], ['wolf_ice', 2]],
     dark:     [['knight_d', 2], ['skeleton_d', 3], ['wisp_dark', 3], ['serpent_d', 2]],
 
     // Dungeons
-    cave_fire:  [['slime_fire', 3], ['bat', 3], ['goblin', 3], ['wolf', 2], ['golem', 1]],
+    cave_fire:  [['slime_ember', 3], ['imp', 3], ['bat', 2], ['goblin', 2], ['skeleton', 1]],
     temple_ice: [['slime_ice', 3], ['wolf_ice', 3], ['skeleton', 2], ['wisp', 2]],
     tower_wind: [['wisp_wind', 3], ['bat_shadow', 3], ['knight', 2], ['goblin_sh', 2]],
     ruins_earth:[['golem', 3], ['serpent', 3], ['plant_d', 2], ['bandit', 2], ['knight', 2]],
-    fortress:   [['knight_d', 3], ['skeleton_d', 3], ['wisp_dark', 3], ['golem_fire', 2], ['serpent_d', 2]]
+    fortress:   [['knight_d', 3], ['skeleton_d', 3], ['wisp_dark', 3], ['golem_fire', 2], ['serpent_d', 2], ['slime_fire', 1]]
   };
 
-  /** Waehlt eine Gegnergruppe passend zur Tabelle und Gruppenstaerke. */
+  /** Wählt eine Gegnergruppe passend zur Tabelle und Gruppenstärke. */
   D.rollEncounter = function (tableId, avgLevel) {
     var table = D.ENCOUNTERS[tableId] || D.ENCOUNTERS.grass;
     var total = 0, i;
@@ -393,7 +401,7 @@
       return table[0][0];
     }
 
-    // Gruppengroesse waechst mit der Gruppenstaerke
+    // Gruppengröße wächst mit der Gruppenstärke
     var count = 1;
     if (avgLevel >= 3 && Math.random() < .5) count++;
     if (avgLevel >= 7 && Math.random() < .45) count++;
@@ -406,22 +414,22 @@
     return group;
   };
 
-  /* ---------- Laeden ---------- */
+  /* ---------- Läden ---------- */
 
   D.SHOPS = {
-    aldenmark_item: { name: 'Kraeuterladen', kind: 'item',
+    aldenmark_item: { name: 'Kräuterladen', kind: 'item',
       stock: ['trank', 'antidot', 'augentr', 'wachruf', 'echokraut', 'zelt'] },
     aldenmark_gear: { name: 'Waffenschmiede', kind: 'gear',
       stock: ['sword1', 'staff1', 'rod1', 'dag1', 'hv1', 'rb1', 'lt1'] },
     selvia_item: { name: 'Hafenmarkt', kind: 'item',
       stock: ['trank', 'hitrank', 'aether', 'phoenix', 'antidot', 'augentr', 'wachruf', 'echokraut', 'heilwasser', 'bombe', 'zelt'] },
-    selvia_gear: { name: 'Selvias Ausruester', kind: 'gear',
+    selvia_gear: { name: 'Selvias Ausrüster', kind: 'gear',
       stock: ['sword2', 'staff2', 'rod2', 'dag2', 'hv2', 'rb2', 'lt2', 'ac1', 'ac2'] },
     nordheim_item: { name: 'Nordwarenhaus', kind: 'item',
       stock: ['hitrank', 'xtrank', 'aether', 'phoenix', 'heilwasser', 'bombe', 'frostkug', 'donnerst', 'zelt', 'elixier'] },
     nordheim_gear: { name: 'Halle der Schmiede', kind: 'gear',
       stock: ['sword3', 'staff3', 'rod3', 'dag3', 'hv3', 'rb3', 'lt3', 'ac3', 'ac4', 'ac5', 'ac6'] },
-    endshop: { name: 'Wandernder Haendler', kind: 'gear',
+    endshop: { name: 'Wandernder Händler', kind: 'gear',
       stock: ['sword4', 'staff4', 'rod4', 'dag4', 'hv4', 'rb4', 'lt4', 'ac7'] }
   };
 

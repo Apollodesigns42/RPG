@@ -14,7 +14,7 @@
   var FIELD_Y = 26;
   var STATUS_Y = 154;
   var HORIZON = 72;          // Linie zwischen Himmel und Boden
-  var FEET_ROW0 = 112;       // Fusslinie der hinteren Gegnerreihe
+  var FEET_ROW0 = 112;       // Fußlinie der hinteren Gegnerreihe
   var FEET_ROW1 = 144;
   var PARTY_X = 250, PARTY_Y0 = 66, PARTY_DY = 21;
   var CMD_W = 96;
@@ -124,7 +124,7 @@
       if (ref.resist && ref.resist.indexOf(element) >= 0) return .5;
       return 1;
     }
-    // Spielerseite: Ausruestung koennte spaeter resistieren
+    // Spielerseite: Ausrüstung könnte später resistieren
     return 1;
   }
 
@@ -317,7 +317,7 @@
     var def = Data.CHARS[a.id];
     var items = [{ label: 'Angriff', key: 'attack' }];
     if (def.spells.length) items.push({ label: 'Magie', key: 'magic' });
-    if (def.abilities.length) items.push({ label: 'Faehigkeit', key: 'skill' });
+    if (def.abilities.length) items.push({ label: 'Fähigkeit', key: 'skill' });
     items.push({ label: 'Item', key: 'item' });
     items.push({ label: 'Verteidigen', key: 'defend' });
     items.push({ label: 'Fliehen', key: 'flee', disabled: !!B.opts.boss });
@@ -338,7 +338,7 @@
   }
 
   function openSpellMenu(a) {
-    if (a.status.silence) { Sound.sfx('error'); UI.notice('Stumm - keine Magie moeglich!'); return; }
+    if (a.status.silence) { Sound.sfx('error'); UI.notice('Stumm - keine Magie möglich!'); return; }
     var items = a.spells.map(function (id) {
       var sp = Data.SPELLS[id];
       return { label: sp.name, right: sp.mp, key: id, disabled: a.mp < sp.mp,
@@ -365,7 +365,7 @@
     });
     if (!items.length) { Sound.sfx('error'); return; }
     UI.menu({
-      x: 94, y: 44, w: 156, rows: 6, title: 'Faehigkeiten', items: items,
+      x: 94, y: 44, w: 156, rows: 6, title: 'Fähigkeiten', items: items,
       footer: function (it) { return it ? Data.ABILITIES[it.key].desc : ''; },
       onSelect: function (it) {
         var ab = Data.ABILITIES[it.key];
@@ -445,7 +445,7 @@
     UI.push(modal);
   }
 
-  /* ---------- Ausfuehrung ---------- */
+  /* ---------- Ausführung ---------- */
 
   function startExecution() {
     UI.clear();
@@ -483,7 +483,7 @@
     if (!isAlive(a)) return;
     if (a.status && a.status.sleep) {
       if (Math.random() < .35) { delete a.status.sleep; popText(a, 'Erwacht!', '#7fb0ff'); }
-      else { popText(a, 'Schlaeft', '#7fb0ff'); return; }
+      else { popText(a, 'Schläft', '#7fb0ff'); return; }
     }
 
     switch (act.type) {
@@ -493,7 +493,7 @@
       case 'ability':  doAbility(a, Data.ABILITIES[act.ability], act.target); break;
       case 'item':     doItem(a, act.item, act.target); break;
       case 'enemy':    doEnemySkill(a, act.skill, act.target); break;
-      case 'sleep':    popText(a, 'Schlaeft', '#7fb0ff'); break;
+      case 'sleep':    break;   // gerade erwacht: Zug verfällt
     }
   }
 
@@ -581,7 +581,7 @@
     }
   }
 
-  /** Gemeinsame Effektlogik fuer Zauber, Faehigkeiten und Gegner-Skills. */
+  /** Gemeinsame Effektlogik für Zauber, Fähigkeiten und Gegner-Skills. */
   function applyEffect(a, eff, target, source) {
     var enemySide = !a.isEnemy;
     var targets;
@@ -788,7 +788,7 @@
       kind: skill.kind, mult: skill.mult, hits: skill.hits, power: skill.power,
       element: skill.element, status: skill.status, chance: skill.chance,
       stat: skill.stat, amount: skill.amount, turns: skill.turns,
-      target: skill.target || (skill.kind === 'phys' || skill.kind === 'mag' || skill.kind === 'drain' ? 'enemy' : 'self')
+      target: skill.target || (/^(phys|mag|drain|status|debuff)$/.test(skill.kind) ? 'enemy' : 'self')
     };
     if (eff.target === 'enemy' && !target) target = pickPartyTarget();
     applyEffect(e, eff, target, 'enemy');
@@ -860,8 +860,8 @@
     Game.gold += gold;
     drops.forEach(function (d) { Game.addItem(d, 1); });
 
-    var msgs = ['Sieg!', 'Die Gruppe erhaelt ' + exp + ' EXP und ' + gold + ' Gold.'];
-    drops.forEach(function (d) { msgs.push('Fundstueck: ' + Data.ITEMS[d].name + '!'); });
+    var msgs = ['Sieg!', 'Die Gruppe erhält ' + exp + ' EXP und ' + gold + ' Gold.'];
+    drops.forEach(function (d) { msgs.push('Fundstück: ' + Data.ITEMS[d].name + '!'); });
 
     var ups = [];
     Game.party.forEach(function (a) {
@@ -951,7 +951,7 @@
       var tw = (Math.sin(B.time * 2 + i) + 1) / 2;
       if (tw > .55) GFX.rect(sx, sy, 1, 1, 'rgba(200,210,255,' + (tw * .55) + ')');
     }
-    // Ferne Huegel
+    // Ferne Hügel
     for (var x = 0; x < GFX.VW; x++) {
       var h = 10 + Math.sin(x * .045) * 5 + Math.sin(x * .014 + 1.7) * 6;
       GFX.rect(x, HORIZON - h, 1, h, mix(B.bg, '#000000', .45));
@@ -1108,7 +1108,7 @@
       var x = px + 8, y = STATUS_Y + 4 + i * 20;
       var dead = a.hp <= 0;
       UI.text(a.name, x, y, dead ? '#e05050' : '#ffffff');
-      // Status-Kuerzel
+      // Status-Kürzel
       var sx = x + 44;
       for (var k in a.status) {
         if (!a.status[k]) continue;
